@@ -1,4 +1,4 @@
-const G: f64 = 6.67408e-11;
+pub const G: f64 = 6.67408e-11;
 
 use crate::vec2::Vec2;
 

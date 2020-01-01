@@ -2,7 +2,7 @@ use super::Simulation;
 use crate::body::Body;
 use std::cell::RefCell;
 
-struct BruteForce;
+pub struct BruteForce;
 
 impl BruteForce {
     pub fn new() -> BruteForce {
@@ -11,7 +11,7 @@ impl BruteForce {
 }
 
 impl Simulation for BruteForce {
-    fn step(&mut self, bodies: &mut Vec<Body>, dt: f64) {
+    fn step(&mut self, bodies: &mut Vec<&mut Body>, dt: f64) {
         {
             let bodies: Vec<RefCell<_>> = bodies.iter_mut().map(|b| RefCell::new(b)).collect();
 
@@ -45,11 +45,11 @@ mod tests {
     fn calculates_next_state() {
         let mut simulation = BruteForce::new();
 
-        let mut bodies = vec![
-            Body::new(Vec2::new(10.0, 9.0), Vec2::unit(), 10.0),
-            Body::new(Vec2::new(7.0, 2.0), Vec2::unit(), 12.0),
-            Body::new(Vec2::new(5.0, 7.0), Vec2::new(2.0, 1.5), 8.0),
-        ];
+        let mut body_1 = Body::new(Vec2::new(10.0, 9.0), Vec2::unit(), 10.0);
+        let mut body_2 = Body::new(Vec2::new(7.0, 2.0), Vec2::unit(), 12.0);
+        let mut body_3 = Body::new(Vec2::new(5.0, 7.0), Vec2::new(2.0, 1.5), 8.0);
+
+        let mut bodies = vec![&mut body_1, &mut body_2, &mut body_3];
 
         simulation.step(&mut bodies, 1e11);
 
