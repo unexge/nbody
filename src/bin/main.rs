@@ -12,7 +12,10 @@ use winit::{
 
 use nbody::{
     body::{Body, G},
-    simulation::{brute_force::BruteForce, Simulation},
+    simulation::{
+        barnes_hut::{quad::Quad, BarnesHut},
+        Simulation,
+    },
     vec2::Vec2,
 };
 
@@ -31,8 +34,8 @@ fn main() -> Result<(), std::io::Error> {
 
     let mut textures = r.swap_chain(win.width as u32, win.height as u32, PresentMode::default());
 
-    let mut sim = BruteForce::new();
-    let mut bodies = create_bodies(500);
+    let mut sim = BarnesHut::new(Quad::new(Vec2::zero(), 2.0 * 1e18));
+    let mut bodies = create_bodies(5000);
 
     event_loop.run(move |event, _, control_flow| match event {
         Event::NewEvents(StartCause::Init) => {

@@ -1,5 +1,6 @@
 use crate::body::Body;
 
+pub mod barnes_hut;
 pub mod brute_force;
 
 pub trait Simulation {

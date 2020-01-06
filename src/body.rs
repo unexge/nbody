@@ -2,7 +2,7 @@ pub const G: f64 = 6.67408e-11;
 
 use crate::vec2::Vec2;
 
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub struct Body {
     pos: Vec2,
     velocity: Vec2,
@@ -49,6 +49,19 @@ impl Body {
     pub fn reset_force(&mut self) {
         self.force = Vec2::zero();
     }
+
+    pub fn add(&self, other: &Body) -> Body {
+        let mass = self.mass + other.mass;
+
+        Body::new(
+            Vec2::new(
+                (self.pos().x() * self.mass + other.pos().x() * other.mass) / mass,
+                (self.pos().y() * self.mass + other.pos().y() * other.mass) / mass,
+            ),
+            Vec2::zero(),
+            mass,
+        )
+    }
 }
 
 #[cfg(test)]
@@ -93,5 +106,16 @@ mod tests {
         body.reset_force();
 
         assert_eq!(body.force(), &Vec2::zero());
+    }
+
+    #[test]
+    fn adds_with_another_body() {
+        let first_body = Body::new(Vec2::new(5.0, 8.0), Vec2::unit(), 10.0);
+        let second_body = Body::new(Vec2::new(9.0, 1.0), Vec2::zero(), 15.0);
+
+        assert_eq!(
+            first_body.add(&second_body),
+            Body::new(Vec2::new(7.4, 3.8), Vec2::zero(), 25.0),
+        );
     }
 }
